@@ -1,3 +1,5 @@
+let current_product = null;
+
 window.addEventListener('load', get_product);
 document.getElementById('addToCart').addEventListener('click', add_to_cart);
 
@@ -15,6 +17,7 @@ async function get_product(){
             throw new Error('Response Status: $(response.status)');
         }
         const product = await response.json();
+        current_product = product;
         populate_page(product);
     }
     catch(error){
@@ -87,6 +90,8 @@ function add_to_cart(){
         }   
 
         localStorage.setItem(key, JSON.stringify(product_in_cart));    
-        console.log(localStorage);
+        //alert(current_product.name + ' has been added to your cart.  You will be taken back to the Home page.');
+        location.href = './cart.html';
     }
 }
+
