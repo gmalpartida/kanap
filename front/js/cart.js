@@ -248,3 +248,40 @@ function validate_email(){
         document.getElementById('emailErrorMsg').textContent = '';
 }
 
+document.querySelector('form').addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+
+    let contact = {
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        email: document.getElementById('email').value
+    };
+
+    let products = [];
+
+    for (let i = 0; i < localStorage.length; i++){
+        let key = localStorage.key(i);
+        let product_in_cart = JSON.parse(localStorage.getItem(key));
+        products.push(product_in_cart.product_id);
+    }
+
+    let formData = {'contact': contact, 'products':products};
+
+    const response = await fetch('http://localhost:3000/api/products/order', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    });
+
+    if (!response.ok){
+        throw new Error('Response Status: $(response.status)');
+    }
+
+    const product_table = await response.json();
+
+    location.href = './confirmation.html?orderId=' + product_table.orderId;
+
+  });
+
