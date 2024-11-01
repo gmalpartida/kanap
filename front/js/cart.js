@@ -13,6 +13,8 @@ window.addEventListener('load', populate_page);
 document.getElementById('firstName').addEventListener('input', validate_name);
 document.getElementById('lastName').addEventListener('input', validate_name);
 document.getElementById('email').addEventListener('input', validate_email);
+document.getElementById('city').addEventListener('input', validate_city);
+document.getElementById('address').addEventListener('input', validate_address);
 
 /*
 Retrieve products' data and populates the page's html controls
@@ -311,13 +313,8 @@ function is_valid_name(name){
 
     // only letters, hyphen and apostrophe allowed
     if (result){
-        for(let i = 0; i < name.length; i++){            
-            let c = name[i];
-            
-            result = result && ((c >= 'A' && c <= 'z') || c == '-' || c == '\'');
-            if (!result)
-                break;
-        }
+        const valid_characters = /^[A-Za-zÀ-ÿ]+([ '-][A-Za-zÀ-ÿ]+)*$/;
+        result = valid_characters.test(name)
     }
 
     return result;
@@ -349,12 +346,66 @@ Params:         None
 Returns:        None
 */
 function validate_email(){
-    let is_valid = true;
-    if (!is_valid){
+    let email = document.getElementById('email').value;
+    // Check length
+    let result = !(email.length < 3 || email.length > 254);
+
+    if (result){
+        const valid_characters = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;    
+        result = valid_characters.test(email);
+        
+    }
+    
+   if (!result){
         document.getElementById('emailErrorMsg').textContent = 'Invalid email address.';
     }
     else
         document.getElementById('emailErrorMsg').textContent = '';
+}
+
+/*
+performs validation of city name. Displays message if not valid.
+params:         none
+Returns:        none
+*/
+function validate_city() {
+    let city = document.getElementById('city').value;
+    let result = !(city.length < 1 || city.length > 100);
+    if (result){
+        // allow letters, spaces, hyphens, and apostrophes (common in city names)
+        const valid_characters = /^[A-Za-zÀ-ÿ]+(?:[ '-][A-Za-zÀ-ÿ]+)*$/;
+
+        result = valid_characters.test(city);
+    }
+    if (!result){
+        document.getElementById('cityErrorMsg').textContent = 'Invalid city name.';
+    }
+    else
+        document.getElementById('cityErrorMsg').textContent = '';
+}
+
+/*
+performs validation of address. displays error message if not valid.
+params:         none
+returns:        none
+*/
+function validate_address() {
+    let address = document.getElementById('address').value;
+    let result = !(address.length < 1 || address.length > 100);
+
+    if (result){
+        // allow letters, numbers, and common punctuation
+        const valid_characters = /^[A-Za-z0-9À-ÿ.,' -]+$/;
+
+        result = valid_characters.test(address);
+
+    }
+
+    if (!result){
+        document.getElementById('addressErrorMsg').textContent = 'Invalid address.';
+    }
+    else
+        document.getElementById('addressErrorMsg').textContent = '';
 }
 
 /*
