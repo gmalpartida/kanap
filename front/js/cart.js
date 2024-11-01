@@ -1,10 +1,24 @@
+/*
+cart.js
+Implementation of functions for the cart.html page.
+Gino Malpartida
+*/
+
+
+// list of products and prices in the cart, separate from localStorage
 let product_list = [];
 
+// event handling functions
 window.addEventListener('load', populate_page);
 document.getElementById('firstName').addEventListener('input', validate_name);
 document.getElementById('lastName').addEventListener('input', validate_name);
 document.getElementById('email').addEventListener('input', validate_email);
 
+/*
+Retrieve products' data and populates the page's html controls
+Params: None
+Return: None
+*/
 async function populate_page(){
     let cart_totals = {total_quantity:0, total_price:0.0};
     for (let i = 0; i < localStorage.length; i++){
@@ -31,6 +45,13 @@ async function populate_page(){
     
 }
 
+/*
+Creates an article html element.
+Params:
+product_in_cart:    Information of product in the cart
+product:            Additional info, including price.
+Returns:            html element to be added to cart.
+*/
 function create_article_element(product_in_cart, product){
     let article = document.createElement('article');
     article.classList.add('cart__item');
@@ -39,6 +60,11 @@ function create_article_element(product_in_cart, product){
     return article;
 }
 
+/*
+Creates an img html element to be added to the cart item.
+Params:             product information including image's path
+Return:             img html element
+*/
 function create_cart_item_img_element(product){
     let div = document.createElement('div');
     div.classList.add('cart__item__img');
@@ -48,6 +74,13 @@ function create_cart_item_img_element(product){
     return div;
 }
 
+/*
+Creates a cart item description element.
+Params:
+    product_in_cart:        info on product added to cart
+    product:                additional info on product including name.
+Returns:                    html item description element.
+*/
 function create_cart_item_content_description_element(product_in_cart, product){
     let div = document.createElement('div');
     div.classList.add('cart__item__content__description');
@@ -65,6 +98,13 @@ function create_cart_item_content_description_element(product_in_cart, product){
     return div;
 }
 
+/*
+Creates an html cart item content element
+Params:
+    product_in_cart:            info on product added to cart
+    product:                    additional info on product
+Returns:                        html cart item element.
+*/
 function create_cart_item_content(product_in_cart, product){
     let div = document.createElement('div');
     div.classList.add('cart__item__content');
@@ -76,6 +116,11 @@ function create_cart_item_content(product_in_cart, product){
     return div;
 }
 
+/*
+creates an html cart item settings element.
+Params:             None
+Returns:            html cart item settings element.
+*/
 function create_cart_item_content_settings_quantity(){
     let cart_item_content_settings_quantity = document.createElement('div');
     cart_item_content_settings_quantity.classList.add('cart__item__content__settings__quantity');
@@ -83,6 +128,12 @@ function create_cart_item_content_settings_quantity(){
     return cart_item_content_settings_quantity;
 }
 
+/*
+Creates an html quantity element
+Params:         
+    product_in_cart:            info on product in cart
+Returns:                        html quantity element.
+*/
 function create_input_quantity_element(product_in_cart){
     let input_element = document.createElement('input');
     input_element.classList.add('itemQuantity');
@@ -94,6 +145,11 @@ function create_input_quantity_element(product_in_cart){
     return input_element;
 }
 
+/*
+creates html cart item delete element.
+Params:             None
+Returns:            html cart item delete element.
+*/
 function create_cart_item_content_settings_delete_element(){
     let cart_item_content_settings_delete = document.createElement('div');
     cart_item_content_settings_delete.classList.add('cart__item__content__settings__delete');    
@@ -101,7 +157,13 @@ function create_cart_item_content_settings_delete_element(){
     return cart_item_content_settings_delete;
 }
 
-
+/*
+create html cart item content setting element.
+Params:
+    product_in_cart:            info on product in the cart
+    product:                    additional info on product.
+Returns:                        html cart item content setting element.
+*/
 function create_cart_item_content_setting_element(product_in_cart, product){
     //<div class="cart__item__content__settings">
     let cart_item_content_settings = document.createElement('div');
@@ -135,6 +197,11 @@ function create_cart_item_content_setting_element(product_in_cart, product){
     return cart_item_content_settings;
 }
 
+/*
+removes an item from the cart.  Displays a message if cart is empty after deletion of item.
+Params:             None
+Returns:            None
+*/
 function delete_cart_item(){
     let product_id = this.parentNode.parentNode.parentNode.getAttribute('data-id');
     let product_color = this.parentNode.parentNode.parentNode.getAttribute('data-color');
@@ -148,6 +215,15 @@ function delete_cart_item(){
     }
 }
 
+/*
+Populates the cart of items.
+Params:
+    product_in_cart:            info on product in cart
+    product:                    additional info on product.
+Returns:                        
+    total_quantity              total number of items in cart
+    total_price                 total price of all items in cart.
+*/
 function populate_cart(product_in_cart, product){
 
     let article = create_article_element(product_in_cart, product);
@@ -168,6 +244,12 @@ function populate_cart(product_in_cart, product){
     return {total_quantity: total_quantity, total_price: total_price};
 }
 
+/*
+populates the html elements with total price and quantity
+Params:
+    cart_totals:        total quantity and total price for all items in cart
+Returns:                None
+*/
 function populate_cart_totals(cart_totals){
 
     document.getElementById('totalQuantity').textContent =  cart_totals.total_quantity;
@@ -175,6 +257,12 @@ function populate_cart_totals(cart_totals){
 
 }
 
+/*
+Calculates the totals for all items in the cart.
+Params:             None
+Returns:
+    cart_totals:    contains total quantity and total price for items in cart.
+*/
 function calculate_cart_totals(){
     let cart_totals = {total_quantity: 0, total_price: 0.0};
     for (let i = 0; i < localStorage.length; i++)
@@ -191,6 +279,11 @@ function calculate_cart_totals(){
     return cart_totals;
 }
 
+/*
+implements callback for change event of quantity html element.
+Params:         None
+Returns:        none
+*/
 function quantity_change(){
     let current_quantity = parseInt(this.value);
     let product_id = this.parentNode.parentNode.parentNode.parentNode.getAttribute('data-id');
@@ -206,6 +299,12 @@ function quantity_change(){
     populate_cart_totals(cart_totals);
 }
 
+/*
+validates first name and last name using some arbitrary rules.
+Params:
+    name:           name to be validated
+Returns:            true if name is valid otherwise false.
+*/
 function is_valid_name(name){
     // rule for length of name
     result = name.length > 1 && name.length <= 50;
@@ -224,6 +323,11 @@ function is_valid_name(name){
     return result;
 }
 
+/*
+performs name validation and displays a message if not valid.
+Params:         None
+Returns:        none;
+*/
 function validate_name(){
     let is_valid = is_valid_name(this.value);
     if (!is_valid){
@@ -239,6 +343,11 @@ function validate_name(){
             document.getElementById('lastNameErrorMsg').textContent = '';
 }
 
+/*
+performs validation of email address.
+Params:         None
+Returns:        None
+*/
 function validate_email(){
     let is_valid = true;
     if (!is_valid){
@@ -248,9 +357,16 @@ function validate_email(){
         document.getElementById('emailErrorMsg').textContent = '';
 }
 
+/*
+event listener for submit event of form.  goes to confirmation page if all good.
+Params:         
+    evt:        submit event data
+Returns:        none
+*/
 document.querySelector('form').addEventListener('submit', async (evt) => {
     evt.preventDefault();
 
+    // create contact record
     let contact = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
@@ -259,6 +375,7 @@ document.querySelector('form').addEventListener('submit', async (evt) => {
         email: document.getElementById('email').value
     };
 
+    // create product list
     let products = [];
 
     for (let i = 0; i < localStorage.length; i++){
@@ -267,8 +384,10 @@ document.querySelector('form').addEventListener('submit', async (evt) => {
         products.push(product_in_cart.product_id);
     }
 
+    // add contact and product list to form's data
     let formData = {'contact': contact, 'products':products};
 
+    // POST form
     const response = await fetch('http://localhost:3000/api/products/order', {
         method: 'POST',
         headers: {'Content-Type': 'application/json' },
@@ -279,6 +398,7 @@ document.querySelector('form').addEventListener('submit', async (evt) => {
         throw new Error('Response Status: $(response.status)');
     }
 
+    // go to confirmation page if all good.
     const product_table = await response.json();
 
     location.href = './confirmation.html?orderId=' + product_table.orderId;

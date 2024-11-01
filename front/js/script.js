@@ -1,3 +1,9 @@
+/*
+implements functionality of index.html page
+Gino Malpartida
+
+*/
+
 window.addEventListener('load', get_all_products);
 
 /*
