@@ -207,7 +207,7 @@ Returns:            None
 function delete_cart_item(){
     let product_id = this.parentNode.parentNode.parentNode.getAttribute('data-id');
     let product_color = this.parentNode.parentNode.parentNode.getAttribute('data-color');
-    key = product_id + product_color;
+    let key = product_id + product_color;
 
     localStorage.removeItem(key);
     location.reload();
@@ -309,7 +309,7 @@ Returns:            true if name is valid otherwise false.
 */
 function is_valid_name(name){
     // rule for length of name
-    result = name.length > 1 && name.length <= 50;
+    let result = name.length > 1 && name.length <= 50;
 
     // only letters, hyphen and apostrophe allowed
     if (result){
@@ -417,42 +417,47 @@ Returns:        none
 document.querySelector('form').addEventListener('submit', async (evt) => {
     evt.preventDefault();
 
-    // create contact record
-    let contact = {
-        firstName: document.getElementById('firstName').value,
-        lastName: document.getElementById('lastName').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        email: document.getElementById('email').value
-    };
+    if (localStorage.length > 0)
+        {
 
-    // create product list
-    let products = [];
+        // create contact record
+        let contact = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            email: document.getElementById('email').value
+        };
 
-    for (let i = 0; i < localStorage.length; i++){
-        let key = localStorage.key(i);
-        let product_in_cart = JSON.parse(localStorage.getItem(key));
-        products.push(product_in_cart.product_id);
+        // create product list
+        let products = [];
+
+        for (let i = 0; i < localStorage.length; i++){
+            let key = localStorage.key(i);
+            let product_in_cart = JSON.parse(localStorage.getItem(key));
+            products.push(product_in_cart.product_id);
+        }
+
+        // add contact and product list to form's data
+        let formData = {'contact': contact, 'products':products};
+
+        // POST form
+        const response = await fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        });
+
+        if (!response.ok){
+            throw new Error('Response Status: $(response.status)');
+        }
+
+        // go to confirmation page if all good.
+        const product_table = await response.json();
+        localStorage.clear();
+        location.href = './confirmation.html?orderId=' + product_table.orderId;
     }
-
-    // add contact and product list to form's data
-    let formData = {'contact': contact, 'products':products};
-
-    // POST form
-    const response = await fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-    });
-
-    if (!response.ok){
-        throw new Error('Response Status: $(response.status)');
-    }
-
-    // go to confirmation page if all good.
-    const product_table = await response.json();
-
-    location.href = './confirmation.html?orderId=' + product_table.orderId;
-
+    else
+        alert('Please add some items to your cart.')
   });
 

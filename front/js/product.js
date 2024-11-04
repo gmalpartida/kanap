@@ -54,7 +54,7 @@ Params:         product info
 Returns:        html img element
 */
 function create_img_element(product){
-    img = document.createElement('img');
+    let img = document.createElement('img');
     img.src = product.imageUrl;
     img.alt = product.altTxt;
     return img;
@@ -67,7 +67,7 @@ Params:
 Returns:            None
 */
 function populate_colors(product){
-    select = document.getElementById('colors');
+    let select = document.getElementById('colors');
     for (let i = 0; i < product.colors.length; i++){
         option = document.createElement('option');
         option.value = product.colors[i];
@@ -83,17 +83,17 @@ Params:
 Returns:            none
 */
 function populate_page(product){
-    img = create_img_element(product);
+    let img = create_img_element(product);
     img_div = document.getElementsByClassName('item__img');
     img_div[0].appendChild(img);
 
-    h1 = document.getElementById('title');
+    let h1 = document.getElementById('title');
     h1.textContent = product.name;
 
-    span = document.getElementById('price');
+    let span = document.getElementById('price');
     span.textContent = product.price;
 
-    p = document.getElementById('description');
+    let p = document.getElementById('description');
     p.textContent = product.description;
 
     populate_colors(product);
@@ -105,9 +105,9 @@ Params:         None
 Returns:        None
 */
 function add_to_cart(){
-    product_id = get_product_id();
-    color = document.getElementById('colors').value;
-    quantity = document.getElementById('quantity').value;
+    let product_id = get_product_id();
+    let color = document.getElementById('colors').value;
+    let quantity = document.getElementById('quantity').value;
 
     // some basic checks for missing data
     if (0 >= quantity){
@@ -120,9 +120,9 @@ function add_to_cart(){
     }
     else{
         // update cart ( localStorage ) with quantity changes
-        key = product_id + color;
+        let key = product_id + color;
 
-        product_in_cart = JSON.parse(localStorage.getItem(key));
+        let product_in_cart = JSON.parse(localStorage.getItem(key));
 
         if (null == product_in_cart){
             product_in_cart = {'product_id':product_id, 'color':color, 'quantity':quantity};

@@ -7,7 +7,7 @@ Gino Malpartida
 window.addEventListener('load', populate_page);
 
 /*
-retrieves order if from URL params
+retrieves order id from URL params
 Params:         None
 Returns:        order id 
 */
